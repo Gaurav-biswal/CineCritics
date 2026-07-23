@@ -1,0 +1,17 @@
+{% extends "reviews/base.html" %}
+
+{% block content %}
+<div class="auth-container">
+    <h1 class="page-title">Logging out?</h1>
+    <p class="auth-subtitle">Are you sure you want to log out of CineCritics?</p>
+    
+    <div class="confirm-actions">
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="signup-btn logout-confirm-btn">Yes, Logout</button>
+        </form>
+        
+        <a href="{% url 'movie_list' %}" class="explore-btn cancel-btn">Cancel</a>
+    </div>
+</div>
+{% endblock %}

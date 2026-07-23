@@ -1,0 +1,19 @@
+{% extends 'reviews/base.html' %}
+
+{% block content %}
+<h1 class="page-title">{{ title }}</h1>
+
+<div class="movie-grid">
+    {% for movie in movies %}
+        <a href="{% url 'movie_detail' movie.slug %}" class="movie-link">
+            <div class="movie-card">
+                <img src="{{ movie.image }}" alt="{{ movie.title }}">
+                <div class="movie-content">
+                    <h2>{{ movie.title }}</h2>
+                    <p class="rating-badge">★ {{ movie.avg_rating|floatformat:1 }}</p>
+                </div>
+            </div>
+        </a>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'reviews/base.html' %}
+
+{% block content %}
+<h1 class="page-title">Trending right now</h1>
+
+<div class="movie-grid">
+    {% for movie in trending_movies %}
+        <a href="{% url 'movie_detail' movie.slug %}" class="movie-link">
+            <div class="movie-card">
+                <img src="{{ movie.image }}" alt="{{ movie.title }}">
+                <div class="movie-content">
+                    <h2>{{ movie.title }}</h2>
+                </div>
+            </div>
+        </a>
+    {% endfor %}
+</div>
+
+<!-- Home Navigation Section -->
+<div class="home-nav">
+    <!-- Explore button -->
+    <a href="{% url 'explore' %}" class="explore-btn">Explore All Movies</a>
+    
+    <!-- ONLY show this to guests (not logged in) -->
+    {% if not request.user.is_authenticated %}
+    <div class="auth-section">
+        <h2>Join CineCritics</h2>
+        <p>Create an account to leave reviews and track your favorites.</p>
+        <a href="{% url 'register' %}" class="signup-btn">Sign Up Now</a>
+    </div>
+    {% endif %}
+</div>
+
+
+<!-- ABOUT US -->
+<div id="about" class="about-section" style="margin-top: 100px;">
+    <h1 class="page-title">About us</h1>
+    <p>
+        CineCritics is an entertainment and movie review 
+        platform committed to providing authentic reviews, in-depth analysis, 
+        and up-to-date coverage of the film industry. We deliver carefully curated content across movies, 
+        web series, and cinematic trends to help audiences stay informed and engaged. 
+        With a strong focus on credibility, quality, and a passion for storytelling, 
+        CineCritics serves as a trusted destination for movie enthusiasts seeking meaningful 
+        perspectives on modern cinema.
+    </p>
+</div>
+{% endblock %}

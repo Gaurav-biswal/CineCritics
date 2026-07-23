@@ -1,0 +1,38 @@
+{% extends "reviews/base.html" %}
+
+{% block content %}
+<div class="auth-container">
+    <h1 class="page-title">Sign Up</h1>
+
+    {% if messages %}
+        <div class="message-container">
+            {% for message in messages %}
+                <p class="error-text">{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="post" class="review-form auth-form">
+        {% csrf_token %}
+        
+        {% for field in form %}
+            <div class="form-group">
+                <label class="form-label">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        <p class="error-text field-error">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="signup-btn submit-btn">Create Account</button>
+    </form>
+
+    <!-- Switch to Login -->
+    <p class="auth-footer">
+        Already have an account? <a href="{% url 'login' %}">Log in here</a>
+    </p>
+</div>
+{% endblock %}

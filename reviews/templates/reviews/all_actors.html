@@ -1,0 +1,19 @@
+{% extends 'reviews/base.html' %}
+
+{% block content %}
+<h1 class="page-title">All Actors</h1>
+
+
+<div class="cast-list actors-grid-page">
+    {% for actor in actors %}
+        <div class="cast-member">
+            <div class="cast-img-wrapper">
+                <img src="{{ actor.image_url }}" alt="{{ actor.name }}" class="cast-img">
+            </div>
+            <span class="cast-name">{{ actor.name }}</span>
+        </div>
+    {% empty %}
+        <p class="no-results-text">No actors added yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

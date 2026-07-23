@@ -1,0 +1,32 @@
+{% extends "reviews/base.html" %}
+
+{% block content %}
+<div class="auth-container">
+    <h1 class="page-title">Login</h1>
+    <p class="auth-subtitle">Please use the form below to log in:</p>
+
+    {% if messages %}
+    <div class="message-container">
+        {% for message in messages %}
+            <p class="success-text">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    
+    <form method="post" class="review-form auth-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="signup-btn submit-btn">Login</button>
+    </form>
+
+    <p class="auth-switch">
+        <a href="{% url 'password_reset' %}">Forgot password?</a>
+    </p>
+
+    
+    <p class="auth-switch">
+        Don't have an account? <a href="{% url 'register' %}">Sign up here</a>
+    </p>
+</div>
+{% endblock %}

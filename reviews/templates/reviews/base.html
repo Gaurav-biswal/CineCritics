@@ -1,0 +1,67 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CineCritics</title>
+    <link rel="stylesheet" href="{% static 'css/style2.css' %}">
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">
+            CineCritics
+        </div>
+
+        <div class="nav-links">
+            <a href="{% url 'movie_list' %}">Home</a>
+
+            <a href="{% url 'explore' %}">Explore</a>
+
+            <a href="{% url 'movie_list' %}#about">About us</a>
+
+            {% if user.is_authenticated %}
+                <a href="{% url 'watchlist' %}">My Watchlist</a>
+
+                <a href="{% url 'profile' %}">Profile</a>
+
+                <a href="{% url 'logout_confirm' %}" class="nav-logout">Logout</a>
+
+            {% else %}
+                <a href="{% url 'login' %}">Login</a>
+            {% endif %}
+        </div>
+    </nav>
+
+
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <footer>
+
+        <div class="footer-content">
+
+            <h2>CineCritics</h2>
+
+            <p>
+                Discover trending movies, ratings, and reviews.
+            </p>
+
+            <p>
+                © 2026 CineCritics. All Rights Reserved.
+            </p>
+
+        </div>
+
+    </footer>
+
+    <a href="#" class="back-to-top">↑</a>
+
+
+</body>
+
+</html>

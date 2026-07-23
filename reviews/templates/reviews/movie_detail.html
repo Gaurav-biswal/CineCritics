@@ -1,0 +1,188 @@
+{% extends 'reviews/base.html' %}
+
+{% block content %}
+
+<div class="detail-card">
+
+    <img src="{{ movie.image }}" alt="{{ movie.title }}">
+
+    <div class="detail-content">
+
+        <h1>{{ movie.title }}</h1>
+
+        <p>
+            <strong>Director:</strong>
+            {{ movie.director }}
+        </p>
+
+        <p>
+            <strong>Genre:</strong>
+            {{ movie.genre }}
+        </p>
+
+        <p>
+            <strong>Release Date:</strong>
+            {{ movie.release_date }}
+        </p>
+
+        <p>
+            <strong>Ratings:</strong>
+
+            {% if avg_rating %}
+            {{ avg_rating|floatformat:1 }}/10 ({{ review_count }})
+            {% else %}
+            No ratings yet
+            {% endif %}
+        </p>
+        <!-- <p>
+            <strong>Total Reviews:</strong>
+            {{ review_count }}
+        </p> -->
+
+        <p>{{ movie.description }}</p>
+
+    </div>
+
+</div>
+
+<div class="watchlist-section">
+    {% if request.user in movie.users_wishlist.all %}
+        <a href="{% url 'toggle_watchlist' movie.id %}" class="watchlist-btn remove">
+            Remove from Watchlist
+        </a>
+    {% else %}
+        <a href="{% url 'toggle_watchlist' movie.id %}" class="watchlist-btn add">
+            + Add to Watchlist
+        </a>
+    {% endif %}
+</div>
+
+
+<!-- Trailer Section -->
+{% if movie.trailer_url %}
+    <h2 class="section-title">Trailer</h2>
+    <div class="video-container">
+        <div class="video-wrapper">
+            <iframe 
+                src="{{ movie.trailer_url }}" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+{% endif %}
+
+
+<!-- Photos Section -->
+{% if photos_list %}
+    <h2 class="section-title">Photos</h2>
+    <div class="photo-gallery">
+        {% for photo_url in photos_list %}
+            <img src="{{ photo_url }}" class="gallery-img">
+        {% endfor %}
+    </div>
+{% endif %}
+
+<!-- Cast Section -->
+<h2 class="section-title">Top Cast</h2>
+<div class="cast-list">
+    {% for actor in cast_list %}
+        <div class="cast-member">
+            <div class="cast-img-wrapper">
+                <img src="{{ actor.image_url }}" alt="{{ actor.name }}" class="cast-img">
+            </div>
+            <span class="cast-name">{{ actor.name }}</span>
+        </div>
+    {% endfor %}
+</div>
+
+
+{% if movie.release_date <= today %}
+    <h2 class="section-title">Reviews</h2>
+
+    {% for review in reviews %}
+
+    <div class="review-box">
+
+        <h3>{{ review.user.username }}</h3>
+
+        <div class="rating">
+            Rating: {{ review.rating }}/10
+        </div>
+
+        <div class="stars">
+
+            {% if review.rating >= 1 %}★{% else %}☆{% endif %}
+            {% if review.rating >= 2 %}★{% else %}☆{% endif %}
+            {% if review.rating >= 3 %}★{% else %}☆{% endif %}
+            {% if review.rating >= 4 %}★{% else %}☆{% endif %}
+            {% if review.rating >= 5 %}★{% else %}☆{% endif %}
+            {% if review.rating >= 6 %}★{% else %}☆{% endif %}
+            {% if review.rating >= 7 %}★{% else %}☆{% endif %}
+            {% if review.rating >= 8 %}★{% else %}☆{% endif %}
+            {% if review.rating >= 9 %}★{% else %}☆{% endif %}
+            {% if review.rating >= 10 %}★{% else %}☆{% endif %}
+
+        </div>
+
+        <p>{{ review.comment }}</p>
+
+    </div>
+
+    {% empty %}
+
+    <p>No reviews yet.</p>
+
+    {% endfor %}
+
+
+    <h2 class="section-title">Rate this film</h2>
+
+    <form method="post" class="review-form">
+        {% csrf_token %}
+        
+        <div class="rating-container">
+            <!-- <label>Select Rating:</label> -->
+            <div class="rating-options">
+                {% for radio in form.rating %}
+                    <div class="rating-item">
+                        {{ radio.tag }}
+                        <label for="{{ radio.id_for_label }}">★</label> <!--{{ radio.choice_label }}-->
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="comment-section">
+            <label>Write a Comment:</label>
+            {{ form.comment }}
+        </div>
+
+        <button type="submit">POST</button>
+    </form>
+{% else %}
+    <!-- <h2 class="section-title">Reviews</h2> -->
+    <p class="upcoming-message">Coming Soon.</p>
+{% endif %}
+
+<!-- More Like This Section -->
+{% if more_like_this %}
+    <h2 class="section-title">More Like This</h2>
+    <div class="movie-grid">
+        {% for related in more_like_this %}
+            <a href="{% url 'movie_detail' related.slug %}" class="movie-link">
+                <div class="movie-card">
+                    <img src="{{ related.image }}" alt="{{ related.title }}">
+                    <div class="movie-content">
+                        <h2>{{ related.title }}</h2>
+                        <p>{{ related.avg_rating|floatformat:1 }}</p>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% endblock %}

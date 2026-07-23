@@ -1,0 +1,31 @@
+{% extends 'reviews/base.html' %}
+
+{% block content %}
+<div class="auth-container profile-page">
+    <h1 class="page-title">User Profile</h1>
+    
+    
+    <div class="profile-info">
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Member Since:</strong> {{ user.date_joined|date:"M d, Y" }}</p>
+    </div>
+
+    <!-- Stats Cards Section -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <span class="stat-number">{{ user_reviews.count }}</span>
+            <span class="stat-label">Reviews Written</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number">{{ watchlist_count }}</span>
+            <span class="stat-label">Movies in Watchlist</span>
+        </div>
+    </div>
+
+
+    <div class="profile-actions">
+        <a href="{% url 'movie_list' %}" class="explore-btn" style="text-decoration: none;">Back to Home</a>
+    </div>
+</div>
+{% endblock %}

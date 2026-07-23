@@ -1,0 +1,178 @@
+{% extends 'reviews/base.html' %}
+
+{% block content %}
+
+<!-- HEADING -->
+<h1 class="page-title">
+    {% if query %}
+        Search Results
+    {% elif selected_genre %}
+        Top {{ selected_genre }} Movies
+    {% else %}
+        Explore Cinema
+    {% endif %}
+</h1>
+
+<!-- Search Bar -->
+<form method="GET" class="search-form">
+    <input type="text" name="q" placeholder="Search movies..." value="{{ request.GET.q }}">
+    <button type="submit">Search</button>
+</form>
+
+<!-- Genre Buttons -->
+<div class="genre-filter">
+    <a href="{% url 'explore' %}" class="{% if not selected_genre %}active{% endif %}">All</a>
+    {% for genre in genres %}
+        <a href="?genre={{ genre }}" class="{% if selected_genre == genre %}active{% endif %}">
+            {{ genre }}
+        </a>
+    {% endfor %}
+</div>
+
+<!-- SPECIAL SECTIONS -->
+{% if not selected_genre and not query %}
+    
+    <!-- 1. Fans' Favorites Section -->
+    {% if fans_favorites %}
+    <div class="category-block">
+        <h2 class="section-subtitle">Fans' Favorites</h2>
+        <div class="movie-grid">
+            {% for movie in fans_favorites|slice:":6" %}
+                <a href="{% url 'movie_detail' movie.slug %}" class="movie-link">
+                    <div class="movie-card">
+                        <img src="{{ movie.image }}" alt="{{ movie.title }}">
+                        <div class="movie-content">
+                            <h2>{{ movie.title }}</h2>
+                            <p class="rating-badge">★ {{ movie.avg_rating|floatformat:1 }}</p>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+        <div class="see-more-container">
+            <a href="{% url 'section_list' 'favorites' %}" class="see-more-btn">See All</a>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- 2. Latest Releases Section -->
+    {% if latest_releases %}
+    <div class="category-block">
+        <h2 class="section-subtitle">Latest Releases</h2>
+        <div class="movie-grid">
+            {% for movie in latest_releases|slice:":6" %}
+                <a href="{% url 'movie_detail' movie.slug %}" class="movie-link">
+                    <div class="movie-card">
+                        <img src="{{ movie.image }}" alt="{{ movie.title }}">
+                        <div class="movie-content">
+                            <h2>{{ movie.title }}</h2>
+                            <p>{{ movie.release_date|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+        <div class="see-more-container">
+            <a href="{% url 'section_list' 'latest' %}" class="see-more-btn">See All</a>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- 3. Coming Soon Section -->
+    {% if upcoming_movies %}
+    <div class="category-block">
+        <h2 class="section-subtitle">Coming Soon</h2>
+        <div class="movie-grid">
+            {% for movie in upcoming_movies|slice:":6" %}
+                <a href="{% url 'movie_detail' movie.slug %}" class="movie-link">
+                    <div class="movie-card">
+                        <img src="{{ movie.image }}" alt="{{ movie.title }}">
+                        <div class="movie-content">
+                            <h2>{{ movie.title }}</h2>
+                            <p>Releasing: {{ movie.release_date|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+        <div class="see-more-container">
+            <a href="{% url 'section_list' 'upcoming' %}" class="see-more-btn">See All</a>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if not selected_genre and not query %}
+
+        <!-- 4. Popular Actors Section -->
+        {% if popular_actors %}
+        <div class="category-block">
+            <h2 class="section-subtitle">Popular Actors</h2>
+            <div class="actors-section-grid">
+                {% for actor in popular_actors %}
+                    <div class="cast-member">
+                        <div class="cast-img-wrapper">
+                            <img src="{{ actor.image_url }}" alt="{{ actor.name }}" class="cast-img">
+                        </div>
+                        <span class="cast-name">{{ actor.name }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="see-more-container">
+                <a href="{% url 'all_actors' %}" class="see-more-btn">See All Actors</a>
+            </div>
+        </div>
+        {% endif %}
+
+    {% endif %}
+
+
+{% endif %}
+
+
+<!-- Main Movie Grid -->
+<div class="category-block">
+    <h2 class="section-subtitle">
+        {% if query %}
+            Results for "{{ query }}"
+        {% elif selected_genre %}
+            Top {{ selected_genre }}
+        {% else %}
+            What to Watch
+        {% endif %}
+    </h2>
+
+    <div class="movie-grid">
+        {% for movie in movies|slice:":12" %}
+            <a href="{% url 'movie_detail' movie.slug %}" class="movie-link">
+                <div class="movie-card">
+                    <img src="{{ movie.image }}" alt="{{ movie.title }}">
+                    <div class="movie-content">
+                        <h2>{{ movie.title }}</h2>
+                        <p><strong>Genre:</strong> {{ movie.genre }}</p>
+                        <p class="rating-badge">
+                            {% if movie.avg_rating %}
+                                ★ {{ movie.avg_rating|floatformat:1 }}
+                            {% else %}
+                                No ratings
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </a>
+        {% empty %}
+
+            <div class="search-empty">
+                <p>No movies found matching your search.</p>
+                <a href="{% url 'explore' %}" class="clear-search-btn">Clear search</a>
+            </div>
+        {% endfor %}
+    </div>
+
+
+    {% if not query and not selected_genre %}
+    <div class="see-more-container">
+        <a href="{% url 'section_list' 'all' %}" class="see-more-btn">See More Movies</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
