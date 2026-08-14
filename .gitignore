@@ -11,3 +11,5 @@ media/
 *.sqlite3-journal
 staticfiles/
 .vscode/
+
+screenshots/
